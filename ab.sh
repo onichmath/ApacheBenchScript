@@ -14,7 +14,7 @@ concurrency=1
 # Run Apache Bench in a loop until there are failed requests
 while true; do
     # Run Apache Bench
-    ab -n "${connections}" -c "${concurrency}" -v "3" "${url}" &> "${connections}.txt"
+    ab -n "${connections}" -c "${concurrency}" -v "3" "${url}" &> "${connections}_${concurrency}.txt"
 
     # Check if timed out from ab exit status
     # Check if there are failed requests in the output
