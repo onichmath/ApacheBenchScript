@@ -21,11 +21,12 @@ while true; do
     failed_requests=$(tail -n "25" "${connections}_${concurrency}.txt" | head -n "1" | awk '{print $3}')
     echo "${failed_requests} -n ${connections} -c ${concurrency}"
 
+    results=$(tail -n "40" "${connections}_${concurrency}.txt")
+    echo  "$results" > "${connections}_${concurrency}_results.txt"
+
     if [ "$failed_requests" != 0 ]; then
         break
     fi
-    results=$(tail -n "40" "${connections}_${concurrency}.txt")
-    echo  "$results" > "${connections}_${concurrency}_results.txt"
     connections=$((connections * 2))
     concurrency=$((concurrency * 2))
 
