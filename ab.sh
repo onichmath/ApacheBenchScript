@@ -24,6 +24,8 @@ while true; do
     if [ "$failed_requests" != 0 ]; then
         break
     fi
+    results=$(tail -n "40" "${connections}_${concurrency}.txt")
+    echo  "$results" > "${connections}_${concurrency}_results.txt"
     connections=$((connections * 2))
     concurrency=$((concurrency * 2))
 
