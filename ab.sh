@@ -18,8 +18,8 @@ while true; do
 
     # Check if timed out from ab exit status
     # Check if there are failed requests in the output
-    failed_requests=$(tail -n "25" "${connections}_${concurrency}.txt" | head -n "1" | awk '{print $3}')
-    echo "${failed_requests} -n ${connections} -c ${concurrency}"
+    failed_requests=$(tail -n "30" "${connections}_${concurrency}.txt" | grep "Failed requests" | awk '{print $3}')
+    echo "Failed Requests: ${failed_requests}, Options: \"-n ${connections} -c ${concurrency}\""
 
     results=$(tail -n "40" "${connections}_${concurrency}.txt")
     echo  "$results" > "${connections}_${concurrency}_results.txt"
