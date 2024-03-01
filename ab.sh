@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # Check if the number of arguments is not equal to 1
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 {url}"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 {max_concurrency} {url}"
     exit 1
 fi
 
-url=$1
+url=$2
+max_concurrency=$1
 connections=2
 concurrency=1
 
@@ -14,6 +15,10 @@ concurrency=1
 # Run Apache Bench in a loop until there are failed requests
 while true; do
     # Run Apache Bench
+    if [ "${concurrency}" -gt "$max_concurrency" ]; then
+        break
+    fi 
+
     ab -n "${connections}" -c "${concurrency}" -v "3" "${url}" &> "${connections}_${concurrency}.txt"
 
     # Check if timed out from ab exit status
@@ -24,15 +29,10 @@ while true; do
     results=$(tail -n "40" "${connections}_${concurrency}.txt")
     echo  "$results" > "${connections}_${concurrency}_results.txt"
 
-    if [ "$failed_requests" != 0 ]; then
-        break
-    fi
     connections=$((connections * 2))
     concurrency=$((concurrency * 2))
 
 
 done
 
-# Display a message indicating completion
-echo "Failed ${failed_requests} at ${connections} connections and ${concurrency} concurrency"
 
